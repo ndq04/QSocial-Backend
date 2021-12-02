@@ -73,7 +73,7 @@ const authController = {
       )
       if (!user) {
         return res.status(400).json({
-          message: 'User does not exist !',
+          message: 'Tài khoản đăng nhập không tồn tại !',
         })
       }
 
@@ -81,7 +81,7 @@ const authController = {
       if (!validPassword) {
         return res.status(400).json({
           success: false,
-          message: 'Password is incorrect !',
+          message: 'Mật khẩu không chính xác !',
         })
       }
 
@@ -95,7 +95,7 @@ const authController = {
       })
 
       res.status(200).json({
-        message: 'Logged in succes !',
+        message: 'Đăng nhập thành công !',
         access_token,
         user,
       })
@@ -122,7 +122,7 @@ const authController = {
       const ref_token = req.cookies.refreshtoken
       if (!ref_token) {
         return res.status(400).json({
-          message: 'You are not logged in !',
+          message: 'Bạn chưa đăng nhập !',
         })
       }
       jwt.verify(
@@ -130,7 +130,7 @@ const authController = {
         process.env.REFRESHTOKENSECRET,
         async (err, result) => {
           if (err) {
-            return res.status(400).json({message: 'You are not logged in !'})
+            return res.status(400).json({message: 'Bạn chưa đăng nhập !'})
           }
 
           const user = await User.findById(result.id)
