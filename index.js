@@ -9,7 +9,7 @@ const cors = require('cors')
 const cookieparser = require('cookie-parser')
 
 const authRouter = require('./routers/authRouter')
-// const userRouter = require('./routers/userRouter')
+const userRouter = require('./routers/usersRouter')
 // const postRouter = require('./routers/postRouter')
 
 // Connect DB
@@ -24,7 +24,7 @@ app.use(morgan('common'))
 
 // routes
 app.use('/api', authRouter)
-// app.use('/api', userRouter)
+app.use('/api', userRouter)
 // app.use('/api', postRouter)
 
 app.get('/', (req, res) => {
