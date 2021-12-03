@@ -5,14 +5,14 @@ const jwt = require('jsonwebtoken')
 const authController = {
   register: async (req, res) => {
     try {
-      const {fullname, username, email, password, gender} = req.body
+      const {firstname, lastname, username, email, password, gender} = req.body
       const newUsername = username.toLowerCase().replace(/ /g, '')
 
       // Check exists username
       const checkExistsUsername = await User.findOne({username: newUsername})
       if (checkExistsUsername) {
         return res.status(400).json({
-          message: 'This username already exist !',
+          message: 'Tên người dùng này đã được sử dụng !',
         })
       }
 
@@ -20,14 +20,14 @@ const authController = {
       const checkExistsEmail = await User.findOne({email})
       if (checkExistsEmail) {
         return res.status(400).json({
-          message: 'This email already exist !',
+          message: 'Địa chỉ email này đã được sử dụng !',
         })
       }
 
       // Check password length
       if (password.length < 6) {
         return res.status(400).json({
-          message: 'Password must be at least 6 characters long !',
+          message: 'Mật khẩu phải có tối thiểu 6 ký tự !',
         })
       }
 
@@ -35,10 +35,12 @@ const authController = {
       const hashedPassword = await argon2.hash(password)
 
       const newUser = await new User({
-        fullname,
+        firstname,
+        lastname,
         username: newUsername,
         email,
         password: hashedPassword,
+        gender,
       })
 
       const access_token = createAccessToken({id: newUser._id})
@@ -53,7 +55,7 @@ const authController = {
       await newUser.save()
 
       res.status(200).json({
-        message: 'Registed succes !',
+        message: 'Đăng ký tài khoản thành công !',
         access_token,
         user: newUser,
       })
