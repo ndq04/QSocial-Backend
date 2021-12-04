@@ -15,10 +15,8 @@ const userController = {
 
   getUser: async (req, res) => {
     try {
-      const user = await User.find({username: {_id: req.params.id}})
-        .limit(10)
-        .select('-password')
-      if (user) {
+      const user = await User.findOne({_id: req.params.id}).select('-password')
+      if (!user) {
         return res.status(400).json({message: 'No user exists'})
       }
       res.status(200).json({user})

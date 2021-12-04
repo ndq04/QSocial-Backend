@@ -48,6 +48,10 @@ const UserSchema = new Schema(
       type: String,
       default: '',
     },
+    coverimage: {
+      type: String,
+      default: '',
+    },
     story: {
       type: String,
       defalut: '',
