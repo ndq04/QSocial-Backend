@@ -32,7 +32,15 @@ const UserSchema = new Schema(
       type: String,
       required: true,
     },
-    address: {
+    from: {
+      type: String,
+      default: '',
+    },
+    livein: {
+      type: String,
+      default: '',
+    },
+    job: {
       type: String,
       default: '',
     },
@@ -46,11 +54,11 @@ const UserSchema = new Schema(
     },
     avatar: {
       type: String,
-      default: '',
+      default: 'https://i.imgur.com/iDuSx6e.png',
     },
     coverimage: {
       type: String,
-      default: '',
+      default: 'https://i.imgur.com/Uk3dtJn.png',
     },
     story: {
       type: String,
