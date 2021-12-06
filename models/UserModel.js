@@ -48,10 +48,6 @@ const UserSchema = new Schema(
       type: String,
       default: 'male',
     },
-    phone: {
-      type: String,
-      default: '',
-    },
     avatar: {
       type: String,
       default: 'https://i.imgur.com/iDuSx6e.png',
@@ -66,6 +62,12 @@ const UserSchema = new Schema(
       maxlength: 200,
     },
     friends: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: 'user',
+      },
+    ],
+    followers: [
       {
         type: mongoose.Types.ObjectId,
         ref: 'user',

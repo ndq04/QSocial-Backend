@@ -76,7 +76,21 @@ const userController = {
     }
   },
 
-  friend: async (req, res) => {
+  updateUserCoverimage: async (req, res) => {
+    try {
+      const user = await User.findById(req.body.userId)
+      if (user) {
+        user.coverimage = req.body.coverimage || user.coverimage
+      }
+      const updateUser = await user.save()
+
+      res.status(200).json({message: 'Cập nhật ảnh bìa thành công', updateUser})
+    } catch (error) {
+      return res.status(404).json({message: 'Người dùng không tồn tại'})
+    }
+  },
+
+  follow: async (req, res) => {
     try {
       // const user = await User.find({
       //   _id: req.params.id,
@@ -88,34 +102,36 @@ const userController = {
       const user = await User.findById(req.params.id)
       const currentUser = await User.findById(req.body.userId)
       await user.updateOne({
-        $push: {friends: req.body.userId},
+        $push: {
+          followers: req.body.userId,
+        },
       })
       await currentUser.updateOne({
-        $push: {followings: req.params.id},
+        $push: {
+          followings: req.params.id,
+        },
       })
-      res.status(200).json({message: 'Thêm bạn thành công'})
+      res.status(200).json({message: 'Theo dõi thành công'})
     } catch (error) {
       return res.status(500).json({message: error.message})
     }
   },
 
-  unfriend: async (req, res) => {
+  unfollow: async (req, res) => {
     try {
-      await User.findOneAndUpdate(
-        {_id: req.params.id},
-        {
-          $pull: {friends: req.user._id},
+      const user = await User.findById(req.params.id)
+      const currentUser = await User.findById(req.body.userId)
+      await user.updateOne({
+        $pull: {
+          followers: req.body.userId,
         },
-        {new: true}
-      )
-      await User.findOneAndUpdate(
-        {_id: req.user._id},
-        {
-          $pull: {followings: req.params.id},
+      })
+      await currentUser.updateOne({
+        $pull: {
+          followings: req.params.id,
         },
-        {new: true}
-      )
-      res.status(200).json({message: 'Xóa bạn thành công'})
+      })
+      res.status(200).json({message: 'Bỏ theo dõi thành công'})
     } catch (error) {
       return res.status(500).json({message: error.message})
     }
