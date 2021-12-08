@@ -1,30 +1,9 @@
-const express = require('express')
-const router = express.Router()
-const Post = require('../models/PostModel')
-const User = require('../models/UserModel')
+const router = require('express').Router()
+const {createPost, getPost} = require('../controllers/postController')
+const auth = require('../middlewares/auth')
 
-router.get('/', async (req, res) => {
-  res.send('Posts Page')
-})
-
-// CREATE A POST
-router.post('/', async (req, res) => {
-  const newPost = new Post(req.body)
-  try {
-    const savePost = await newPost.save()
-    res.status(200).json({
-      success: true,
-      message: 'Post created successfully !',
-      post: savePost,
-    })
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: 'Internal server error !',
-      error: err.message,
-    })
-  }
-})
+router.post('/posts', auth, createPost)
+router.get('/posts', auth, getPost)
 
 // UPDATE A POST
 router.put('/:id', async (req, res) => {
@@ -125,9 +104,7 @@ router.get('/:id', async (req, res) => {
 // GET TIMELINE POSTS
 router.get('/timeline/:userId', async (req, res) => {
   try {
-    const currentUser = await User.findById(
-      req.params.userId
-    )
+    const currentUser = await User.findById(req.params.userId)
     const userPosts = await Post.find({
       userId: currentUser._id,
     })

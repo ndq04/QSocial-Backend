@@ -3,23 +3,31 @@ const Schema = mongoose.Schema
 
 const PostSchema = new Schema(
   {
-    userId: {
-      type: String,
-      require: true,
-    },
-    desc: {
-      type: String,
-      max: 500,
-    },
-    image: {
+    content: {
       type: String,
     },
-    likes: {
+    images: {
       type: Array,
       default: [],
+    },
+    likes: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: 'user',
+      },
+    ],
+    comments: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: 'comment',
+      },
+    ],
+    user: {
+      type: mongoose.Types.ObjectId,
+      ref: 'user',
     },
   },
   {timestamps: true}
 )
 
-module.exports = mongoose.model('posts', PostSchema)
+module.exports = mongoose.model('post', PostSchema)

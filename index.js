@@ -10,7 +10,7 @@ const cookieparser = require('cookie-parser')
 
 const authRouter = require('./routers/authRouter')
 const userRouter = require('./routers/usersRouter')
-// const postRouter = require('./routers/postRouter')
+const postRouter = require('./routers/postsRouter')
 
 // Connect DB
 mongoose.connect(process.env.DB_URL)
@@ -25,7 +25,7 @@ app.use(morgan('common'))
 // routes
 app.use('/api', authRouter)
 app.use('/api', userRouter)
-// app.use('/api', postRouter)
+app.use('/api', postRouter)
 
 app.get('/', (req, res) => {
   res.send('Home page')

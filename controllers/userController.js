@@ -90,47 +90,44 @@ const userController = {
     }
   },
 
-  follow: async (req, res) => {
+  friend: async (req, res) => {
     try {
-      // const user = await User.find({
-      //   _id: req.params.id,
-      //   friends: req.body.userId,
-      // })
-      // if (user.length > 0) {
-      //   return res.status(400).json({message: 'Bạn đã theo dõi người dùng này'})
-      // }
-      const user = await User.findById(req.params.id)
-      const currentUser = await User.findById(req.body.userId)
-      await user.updateOne({
-        $push: {
-          followers: req.body.userId,
+      await User.findOneAndUpdate(
+        {_id: req.params.id},
+        {
+          $push: {friends: req.body._id},
         },
-      })
-      await currentUser.updateOne({
-        $push: {
-          followings: req.params.id,
+        {new: true}
+      )
+      await User.findOneAndUpdate(
+        {_id: req.body._id},
+        {
+          $push: {followings: req.params.id},
         },
-      })
+        {new: true}
+      )
       res.status(200).json({message: 'Theo dõi thành công'})
     } catch (error) {
       return res.status(500).json({message: error.message})
     }
   },
 
-  unfollow: async (req, res) => {
+  unfriend: async (req, res) => {
     try {
-      const user = await User.findById(req.params.id)
-      const currentUser = await User.findById(req.body.userId)
-      await user.updateOne({
-        $pull: {
-          followers: req.body.userId,
+      await User.findOneAndUpdate(
+        {_id: req.params.id},
+        {
+          $pull: {friends: req.body._id},
         },
-      })
-      await currentUser.updateOne({
-        $pull: {
-          followings: req.params.id,
+        {new: true}
+      )
+      await User.findOneAndUpdate(
+        {_id: req.body._id},
+        {
+          $pull: {followings: req.params.id},
         },
-      })
+        {new: true}
+      )
       res.status(200).json({message: 'Bỏ theo dõi thành công'})
     } catch (error) {
       return res.status(500).json({message: error.message})

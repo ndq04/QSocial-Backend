@@ -6,29 +6,16 @@ const {
   updateUserProfile,
   updateUserAvatar,
   updateUserCoverimage,
-  follow,
-  unfollow,
+  friend,
+  unfriend,
 } = require('../controllers/userController')
 
-//SEARCH USERS
 router.get('/search', auth, searchUser)
-
-//GET A USER
 router.get('/user/:id', auth, getUser)
-
-// UPDATE PROFILE
 router.patch('/userprofile', auth, updateUserProfile)
-
-// UPDATE AVATAR
 router.patch('/useravatar', auth, updateUserAvatar)
-
-// UPDATE COVERIMAGE
 router.patch('/usercoverimage', auth, updateUserCoverimage)
-
-// FOLLOW
-router.patch('/user/:id/follow', auth, follow)
-
-// UN FOLLOW
-router.patch('/user/:id/unfollow', auth, unfollow)
+router.patch('/user/:id/friend', auth, friend)
+router.patch('/user/:id/unfriend', auth, unfriend)
 
 module.exports = router

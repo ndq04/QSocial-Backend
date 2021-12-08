@@ -1,7 +1,7 @@
 const User = require('../models/UserModel')
 const jwt = require('jsonwebtoken')
 
-const auth = (req, res, next) => {
+const auth = async (req, res, next) => {
   try {
     const token = req.header('Authorization')
     if (!token) {
@@ -13,7 +13,7 @@ const auth = (req, res, next) => {
       return res.status(500).json({message: 'Not Valid'})
     }
 
-    const user = User.findOne({_id: decoded.id})
+    const user = await User.findOne({_id: decoded.id})
     req.user = user
     next()
   } catch (error) {

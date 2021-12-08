@@ -140,10 +140,10 @@ const authController = {
             .populate('friends followings')
 
           if (!user) {
-            return res.status(400).json({message: 'User does not exist'})
+            return res.status(400).json({message: 'Người dùng không tồn tại'})
           }
 
-          const access_token = createAccessToken({id: result._id})
+          const access_token = createAccessToken({id: result.id})
 
           res.status(200).json({
             access_token,
