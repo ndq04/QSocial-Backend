@@ -68,6 +68,38 @@ const postController = {
       })
     }
   },
+  likePost: async (req, res) => {
+    try {
+      await Post.findOneAndUpdate(
+        {_id: req.params.id},
+        {
+          $push: {likes: req.user._id},
+        },
+        {new: true}
+      )
+      res.status(200).json({message: 'Đã thích bài viết'})
+    } catch (error) {
+      res.status(500).json({
+        message: error.message,
+      })
+    }
+  },
+  unlikePost: async (req, res) => {
+    try {
+      await Post.findOneAndUpdate(
+        {_id: req.params.id},
+        {
+          $pull: {likes: req.user._id},
+        },
+        {new: true}
+      )
+      res.status(200).json({message: 'Bỏ thích bài viết'})
+    } catch (error) {
+      res.status(500).json({
+        message: error.message,
+      })
+    }
+  },
 }
 
 module.exports = postController
