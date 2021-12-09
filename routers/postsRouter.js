@@ -1,33 +1,14 @@
 const router = require('express').Router()
-const {createPost, getPost} = require('../controllers/postController')
+const {
+  createPost,
+  getPost,
+  updatePost,
+} = require('../controllers/postController')
 const auth = require('../middlewares/auth')
 
 router.post('/posts', auth, createPost)
 router.get('/posts', auth, getPost)
-
-// UPDATE A POST
-router.put('/:id', async (req, res) => {
-  try {
-    const post = await Post.findById(req.params.id)
-    if (post.userId === req.body.userId) {
-      await post.updateOne({$set: req.body})
-      res.status(200).json({
-        success: true,
-        message: 'The post has been updated !',
-      })
-    } else {
-      return res.status(403).json({
-        success: false,
-        message: 'User is not found !',
-      })
-    }
-  } catch (err) {
-    res.status(404).json({
-      success: false,
-      message: 'The post is not found !',
-    })
-  }
-})
+router.patch('/post/:id', auth, updatePost)
 
 // DELETE A POST
 router.delete('/:id', async (req, res) => {
