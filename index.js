@@ -11,6 +11,7 @@ const cookieparser = require('cookie-parser')
 const authRouter = require('./routers/authRouter')
 const userRouter = require('./routers/usersRouter')
 const postRouter = require('./routers/postsRouter')
+const commentRouter = require('./routers/commentRouter')
 
 // Connect DB
 mongoose.connect(process.env.DB_URL)
@@ -26,10 +27,7 @@ app.use(morgan('common'))
 app.use('/api', authRouter)
 app.use('/api', userRouter)
 app.use('/api', postRouter)
-
-app.get('/', (req, res) => {
-  res.send('Home page')
-})
+app.use('/api', commentRouter)
 
 app.listen(PORT, () => {
   console.log(`Server is listening at http://localhost:${PORT}`)

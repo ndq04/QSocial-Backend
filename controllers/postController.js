@@ -27,7 +27,17 @@ const postController = {
         user: [...req.user.followings, req.user._id],
       })
         .sort('-createdAt')
-        .populate('user likes', 'username avatar firstname lastname')
+        .populate(
+          'user likes',
+          'username avatar firstname lastname livein followings friends'
+        )
+        .populate({
+          path: 'comments',
+          populate: {
+            path: 'user likes',
+            select: '-password',
+          },
+        })
       if (!posts) {
         return res.status(404).json({
           message: 'No post found',
