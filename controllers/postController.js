@@ -40,7 +40,7 @@ const postController = {
         })
       if (!posts) {
         return res.status(404).json({
-          message: 'No post found',
+          message: 'Không tìm thấy bài viết',
         })
       }
       res.status(200).json({
@@ -114,6 +114,40 @@ const postController = {
     } catch (error) {
       res.status(404).json({
         message: 'Bài viết không tồn tại',
+      })
+    }
+  },
+  getUserPosts: async (req, res) => {
+    try {
+      const posts = await Post.find({
+        user: req.params.id,
+      })
+        .sort('-createdAt')
+        .populate(
+          'user likes',
+          'username avatar firstname lastname livein followings friends'
+        )
+        .populate({
+          path: 'comments',
+          populate: {
+            path: 'user likes',
+            select: '-password',
+          },
+        })
+      if (!posts) {
+        return res.status(404).json({
+          message: 'Không tìm thấy bài viết',
+        })
+      }
+      res.status(200).json({
+        message: 'success',
+        result: posts.length,
+        posts,
+      })
+    } catch (error) {
+      res.status(500).json({
+        message: 'Lỗi máy chủ nội bộ',
+        error: error.massage,
       })
     }
   },
