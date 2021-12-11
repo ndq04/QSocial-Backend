@@ -16,13 +16,13 @@ const postController = {
       })
     } catch (error) {
       res.status(500).json({
-        message: error.message,
+        message: 'Lỗi máy chủ nội bộ',
+        error: error.massage,
       })
     }
   },
   getPost: async (req, res) => {
     try {
-      console.log(req.user)
       const posts = await Post.find({
         user: [...req.user.followings, req.user._id],
       })
@@ -50,7 +50,8 @@ const postController = {
       })
     } catch (error) {
       res.status(500).json({
-        message: error.message,
+        message: 'Lỗi máy chủ nội bộ',
+        error: error.massage,
       })
     }
   },
@@ -73,13 +74,19 @@ const postController = {
         },
       })
     } catch (error) {
-      res.status(500).json({
-        message: error.message,
+      res.status(404).json({
+        message: 'Bài viết không tồn tại',
       })
     }
   },
   likePost: async (req, res) => {
     try {
+      const post = await Post.find({_id: req.params.id, likes: req.user._id})
+      if (post.length > 0) {
+        return res.status(400).json({
+          message: 'Bạn đã thích bài viết này rồi',
+        })
+      }
       await Post.findOneAndUpdate(
         {_id: req.params.id},
         {
@@ -89,8 +96,8 @@ const postController = {
       )
       res.status(200).json({message: 'Đã thích bài viết'})
     } catch (error) {
-      res.status(500).json({
-        message: error.message,
+      res.status(404).json({
+        message: 'Bài viết không tồn tại',
       })
     }
   },
@@ -103,10 +110,10 @@ const postController = {
         },
         {new: true}
       )
-      res.status(200).json({message: 'Bỏ thích bài viết'})
+      res.status(200).json({message: 'Đã bỏ thích bài viết'})
     } catch (error) {
-      res.status(500).json({
-        message: error.message,
+      res.status(404).json({
+        message: 'Bài viết không tồn tại',
       })
     }
   },
