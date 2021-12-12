@@ -134,20 +134,38 @@ const postController = {
             select: '-password',
           },
         })
-      if (!posts) {
-        return res.status(404).json({
-          message: 'Không tìm thấy bài viết',
-        })
-      }
       res.status(200).json({
         message: 'success',
         result: posts.length,
         posts,
       })
     } catch (error) {
-      res.status(500).json({
-        message: 'Lỗi máy chủ nội bộ',
-        error: error.massage,
+      res.status(404).json({
+        message: 'Người dùng không tồn tại',
+      })
+    }
+  },
+  getSinglePost: async (req, res) => {
+    try {
+      const post = await Post.findById(req.params.id)
+        .populate(
+          'user likes',
+          'username avatar firstname lastname livein followings friends'
+        )
+        .populate({
+          path: 'comments',
+          populate: {
+            path: 'user likes',
+            select: '-password',
+          },
+        })
+      res.status(200).json({
+        message: 'success',
+        post,
+      })
+    } catch (error) {
+      res.status(404).json({
+        message: 'Không tìm thấy bài viết',
       })
     }
   },
