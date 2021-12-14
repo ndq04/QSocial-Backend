@@ -6,15 +6,21 @@ const {
   likePost,
   unlikePost,
   getUserPosts,
+  savePost,
+  unsavePost,
+  getSavedPost,
 } = require('../controllers/postController')
 const auth = require('../middlewares/auth')
 
 router.post('/posts', auth, createPost)
 router.get('/posts', auth, getPost)
 router.patch('/post/:id', auth, updatePost)
-router.get('/userposts/:id', auth, getUserPosts)
+router.get('/post/:id/userpost', auth, getUserPosts)
 
 router.patch('/post/:id/like', auth, likePost)
 router.patch('/post/:id/unlike', auth, unlikePost)
+router.patch('/save/:id', auth, savePost)
+router.patch('/unsave/:id', auth, unsavePost)
+router.get('/savedposts', auth, getSavedPost)
 
 module.exports = router

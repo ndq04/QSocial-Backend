@@ -61,7 +61,8 @@ const authController = {
       })
     } catch (error) {
       res.status(500).json({
-        message: error.message,
+        message: 'Lỗi máy chủ nội bộ',
+        error: error.massage,
       })
     }
   },
@@ -103,7 +104,8 @@ const authController = {
       })
     } catch (error) {
       res.status(500).json({
-        message: error.message,
+        message: 'Lỗi máy chủ nội bộ',
+        error: error.massage,
       })
     }
   },
@@ -114,7 +116,8 @@ const authController = {
       res.status(200).json({message: 'Logged out !'})
     } catch (error) {
       res.status(500).json({
-        message: error.message,
+        message: 'Lỗi máy chủ nội bộ',
+        error: error.massage,
       })
     }
   },
@@ -153,7 +156,8 @@ const authController = {
       )
     } catch (error) {
       res.status(500).json({
-        message: error.message,
+        message: 'Lỗi máy chủ nội bộ',
+        error: error.massage,
       })
     }
   },

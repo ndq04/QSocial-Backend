@@ -9,7 +9,10 @@ const userController = {
 
       res.status(200).json({users})
     } catch (error) {
-      return res.status(500).json({message: error.message})
+      res.status(500).json({
+        message: 'Lỗi máy chủ nội bộ',
+        error: error.massage,
+      })
     }
   },
 
@@ -17,17 +20,20 @@ const userController = {
     try {
       const user = await User.findOne({_id: req.params.id}).select('-password')
       if (!user) {
-        return res.status(400).json({message: 'No user exists'})
+        return res.status(404).json({message: 'Người dùng không tồn tại'})
       }
       res.status(200).json({user})
     } catch (error) {
-      return res.status(500).json({message: error.message})
+      res.status(500).json({
+        message: 'Lỗi máy chủ nội bộ',
+        error: error.massage,
+      })
     }
   },
 
   updateUserProfile: async (req, res) => {
     try {
-      const {firstname, lastname, livein, from, job, password} = req.body
+      const {firstname, lastname, livein, from, job} = req.body
       const user = await User.findById(req.body.userId)
       if (user) {
         user.firstname = firstname || user.firstname
@@ -42,9 +48,8 @@ const userController = {
             user.password = req.body.password
           } catch {
             res.status(500).json({
-              success: false,
-              message: 'Internal server error !',
-              error: err.message,
+              message: 'Lỗi máy chủ nội bộ',
+              error: error.massage,
             })
           }
         }
@@ -108,7 +113,10 @@ const userController = {
       )
       res.status(200).json({message: 'Theo dõi thành công'})
     } catch (error) {
-      return res.status(500).json({message: error.message})
+      res.status(500).json({
+        message: 'Lỗi máy chủ nội bộ',
+        error: error.massage,
+      })
     }
   },
 
@@ -130,7 +138,10 @@ const userController = {
       )
       res.status(200).json({message: 'Bỏ theo dõi thành công'})
     } catch (error) {
-      return res.status(500).json({message: error.message})
+      res.status(500).json({
+        message: 'Lỗi máy chủ nội bộ',
+        error: error.massage,
+      })
     }
   },
 }

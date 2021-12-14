@@ -10,17 +10,20 @@ const commentController = {
       tag,
       reply,
     })
-    await Post.findOneAndUpdate(
-      {_id: postId},
-      {
-        $push: {comments: newComment._id},
-      }
-    )
-    await newComment.save()
-    res.status(200).json({newComment})
     try {
+      await Post.findOneAndUpdate(
+        {_id: postId},
+        {
+          $push: {comments: newComment._id},
+        }
+      )
+      await newComment.save()
+      res.status(200).json({newComment})
     } catch (error) {
-      res.status(500).json({message: error.message})
+      res.status(500).json({
+        message: 'Lỗi máy chủ nội bộ',
+        error: error.massage,
+      })
     }
   },
   updateComment: async (req, res) => {

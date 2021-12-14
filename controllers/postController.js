@@ -1,4 +1,5 @@
 const Post = require('../models/PostModel')
+const User = require('../models/UserModel')
 
 const postController = {
   createPost: async (req, res) => {
@@ -114,6 +115,57 @@ const postController = {
     } catch (error) {
       res.status(404).json({
         message: 'Bài viết không tồn tại',
+      })
+    }
+  },
+  savePost: async (req, res) => {
+    try {
+      const user = await User.find({_id: req.user._id, saved: req.params.id})
+      if (user.length > 0) {
+        return res.status(400).json({
+          message: 'Bạn đã lưu bài viết này rồi',
+        })
+      }
+      await User.findOneAndUpdate(
+        {_id: req.user._id},
+        {
+          $push: {saved: req.params.id},
+        },
+        {new: true}
+      )
+      res.status(200).json({message: 'Lưu bài viết thành công'})
+    } catch (error) {
+      res.status(404).json({
+        message: 'Bài viết không tồn tại',
+      })
+    }
+  },
+  unsavePost: async (req, res) => {
+    try {
+      await User.findOneAndUpdate(
+        {_id: req.user._id},
+        {
+          $pull: {saved: req.params.id},
+        },
+        {new: true}
+      )
+      res.status(200).json({message: 'Bỏ lưu bài viết thành công'})
+    } catch (error) {
+      res.status(404).json({
+        message: 'Bài viết không tồn tại',
+      })
+    }
+  },
+  getSavedPost: async (req, res) => {
+    try {
+      const savedPost = await Post.find({
+        _id: {$in: req.user.saved},
+      }).sort('-createdAt')
+      res.status(200).json({savedPost})
+    } catch (error) {
+      res.status(500).json({
+        message: 'Lỗi máy chủ nội bộ',
+        error: error.massage,
       })
     }
   },
