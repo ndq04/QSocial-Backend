@@ -5,12 +5,16 @@ const auth = async (req, res, next) => {
   try {
     const token = req.header('Authorization')
     if (!token) {
-      return res.status(500).json({message: 'Không hợp lệ'})
+      return res
+        .status(500)
+        .json({message: 'Lỗi! Người dùng chưa được xác thực'})
     }
 
     const decoded = jwt.verify(token, process.env.ACCESSTOKENSECRET)
     if (!decoded) {
-      return res.status(500).json({message: 'Không hợp lệ'})
+      return res
+        .status(500)
+        .json({message: 'Lỗi! Người dùng chưa được xác thực'})
     }
 
     const user = await User.findOne({_id: decoded.id})

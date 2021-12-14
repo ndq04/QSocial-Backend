@@ -160,7 +160,12 @@ const postController = {
     try {
       const savedPost = await Post.find({
         _id: {$in: req.user.saved},
-      }).sort('-createdAt')
+      })
+        .sort('-createdAt')
+        .populate(
+          'user likes',
+          'username avatar firstname lastname livein followings friends'
+        )
       res.status(200).json({savedPost})
     } catch (error) {
       res.status(500).json({
