@@ -4,6 +4,12 @@ const Post = require('../models/PostModel')
 const commentController = {
   createComment: async (req, res) => {
     const {content, postId, tag, reply} = req.body
+    const post = await Post.findById(postId)
+    if (!post) {
+      return res.status(404).json({
+        message: 'Không tìm thấy bài viết',
+      })
+    }
     const newComment = await new Comment({
       user: req.user._id,
       content,

@@ -10,12 +10,14 @@ const {
   unsavePost,
   getSavedPost,
   getSinglePost,
+  deletePost,
 } = require('../controllers/postController')
 const auth = require('../middlewares/auth')
 
 router.post('/posts', auth, createPost)
 router.get('/posts', auth, getPost)
 router.patch('/post/:id', auth, updatePost)
+router.delete('/post/:id', auth, deletePost)
 router.get('/post/:id/userpost', auth, getUserPosts)
 
 router.patch('/post/:id/like', auth, likePost)

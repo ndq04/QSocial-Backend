@@ -1,5 +1,6 @@
 const Post = require('../models/PostModel')
 const User = require('../models/UserModel')
+const Comment = require('../models/CommentModel')
 
 const postController = {
   createPost: async (req, res) => {
@@ -216,9 +217,26 @@ const postController = {
             select: '-password',
           },
         })
+
       res.status(200).json({
         message: 'success',
         post,
+      })
+    } catch (error) {
+      return res.status(404).json({
+        message: 'Không tìm thấy bài viết',
+      })
+    }
+  },
+  deletePost: async (req, res) => {
+    try {
+      const post = await Post.findOneAndDelete({
+        _id: req.params.id,
+        user: req.user._id,
+      })
+      await Comment.deleteMany({_id: {$in: post.comments}})
+      res.status(200).json({
+        message: 'Xóa bài viết thành công',
       })
     } catch (error) {
       res.status(404).json({
