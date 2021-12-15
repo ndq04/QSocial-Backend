@@ -3,7 +3,7 @@ const Post = require('../models/PostModel')
 
 const commentController = {
   createComment: async (req, res) => {
-    const {content, postId, tag, reply} = req.body
+    const {content, postId, tag, reply, postUserId} = req.body
     const post = await Post.findById(postId)
     if (!post) {
       return res.status(404).json({
@@ -15,6 +15,8 @@ const commentController = {
       content,
       tag,
       reply,
+      postId,
+      postUserId,
     })
     try {
       await Post.findOneAndUpdate(
@@ -87,6 +89,28 @@ const commentController = {
     } catch (error) {
       res.status(404).json({
         message: 'Bình luận không tồn tại',
+      })
+    }
+  },
+  deleteComment: async (req, res) => {
+    try {
+      const comment = await Comment.findOneAndDelete({
+        _id: req.params.id,
+        $or: [{postUserId: req.user._id}, {user: req.user._id}],
+      })
+      await Post.findOneAndUpdate(
+        {_id: comment.postId},
+        {
+          $pull: {comments: req.params.id},
+        }
+      )
+      res.status(200).json({
+        message: 'Xóa bình luận thành công',
+      })
+    } catch (error) {
+      res.status(500).json({
+        message: 'Lỗi máy chủ nội bộ',
+        error: error.massage,
       })
     }
   },

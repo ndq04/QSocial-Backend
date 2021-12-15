@@ -4,6 +4,7 @@ const {
   updateComment,
   likeComment,
   unlikeComment,
+  deleteComment,
 } = require('../controllers/commentController')
 const auth = require('../middlewares/auth')
 
@@ -12,5 +13,7 @@ router.patch('/comment/:id', auth, updateComment)
 
 router.patch('/comment/:id/like', auth, likeComment)
 router.patch('/comment/:id/unlike', auth, unlikeComment)
+
+router.delete('/comment/:id', auth, deleteComment)
 
 module.exports = router
