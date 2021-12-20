@@ -5,16 +5,19 @@ const Comment = require('../models/CommentModel')
 const postController = {
   createPost: async (req, res) => {
     try {
-      const {content, images, user} = req.body
+      const {content, images} = req.body
       const newPost = new Post({
         content,
         images,
-        user,
+        user: req.user._id,
       })
       await newPost.save()
       res.status(200).json({
         message: 'Đăng bài viết thành công !',
-        newPost,
+        newPost: {
+          ...newPost._doc,
+          user: req.user,
+        },
       })
     } catch (error) {
       res.status(500).json({
@@ -237,6 +240,7 @@ const postController = {
       await Comment.deleteMany({_id: {$in: post.comments}})
       res.status(200).json({
         message: 'Xóa bài viết thành công',
+        id: post._id,
       })
     } catch (error) {
       res.status(404).json({

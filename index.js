@@ -12,6 +12,8 @@ const authRouter = require('./routers/authRouter')
 const userRouter = require('./routers/usersRouter')
 const postRouter = require('./routers/postsRouter')
 const commentRouter = require('./routers/commentRouter')
+const notifyRouter = require('./routers/notifyRouter')
+const socketServer = require('./socketServer')
 
 // Connect DB
 mongoose.connect(process.env.DB_URL)
@@ -23,12 +25,19 @@ app.use(express.json())
 app.use(cookieparser())
 app.use(morgan('common'))
 
+const http = require('http').createServer(app)
+const io = require('socket.io')(http)
+io.on('connection', (socket) => {
+  socketServer(socket)
+})
+
 // routes
 app.use('/api', authRouter)
 app.use('/api', userRouter)
 app.use('/api', postRouter)
 app.use('/api', commentRouter)
+app.use('/api', notifyRouter)
 
-app.listen(PORT, () => {
+http.listen(PORT, () => {
   console.log(`Server is listening at http://localhost:${PORT}`)
 })

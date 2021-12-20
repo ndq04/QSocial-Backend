@@ -1,0 +1,18 @@
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
+
+const NotifySchema = new Schema(
+  {
+    id: {type: mongoose.Types.ObjectId},
+    user: {type: mongoose.Types.ObjectId},
+    recipients: [mongoose.Types.ObjectId],
+    url: String,
+    content: String,
+    image: String,
+    text: String,
+    isRead: {type: Boolean, default: false},
+  },
+  {timestamps: true}
+)
+
+module.exports = mongoose.model('notify', NotifySchema)

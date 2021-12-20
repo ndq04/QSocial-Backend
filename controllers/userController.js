@@ -97,13 +97,13 @@ const userController = {
 
   friend: async (req, res) => {
     try {
-      await User.findOneAndUpdate(
+      const newUser = await User.findOneAndUpdate(
         {_id: req.params.id},
         {
           $push: {friends: req.body._id},
         },
         {new: true}
-      )
+      ).populate('friends followings', '-password')
       await User.findOneAndUpdate(
         {_id: req.body._id},
         {
@@ -111,7 +111,7 @@ const userController = {
         },
         {new: true}
       )
-      res.status(200).json({message: 'Theo dõi thành công'})
+      res.status(200).json({message: 'Theo dõi thành công', newUser})
     } catch (error) {
       res.status(500).json({
         message: 'Lỗi máy chủ nội bộ',
@@ -122,13 +122,13 @@ const userController = {
 
   unfriend: async (req, res) => {
     try {
-      await User.findOneAndUpdate(
+      const newUser = await User.findOneAndUpdate(
         {_id: req.params.id},
         {
           $pull: {friends: req.body._id},
         },
         {new: true}
-      )
+      ).populate('friends followings', '-password')
       await User.findOneAndUpdate(
         {_id: req.body._id},
         {
@@ -136,7 +136,7 @@ const userController = {
         },
         {new: true}
       )
-      res.status(200).json({message: 'Bỏ theo dõi thành công'})
+      res.status(200).json({message: 'Bỏ theo dõi thành công', newUser})
     } catch (error) {
       res.status(500).json({
         message: 'Lỗi máy chủ nội bộ',

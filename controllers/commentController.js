@@ -3,7 +3,7 @@ const Post = require('../models/PostModel')
 
 const commentController = {
   createComment: async (req, res) => {
-    const {content, postId, tag, reply, postUserId} = req.body
+    const {content, postId, tag, reply, postUserId, user} = req.body
     const post = await Post.findById(postId)
     if (!post) {
       return res.status(404).json({
@@ -11,12 +11,12 @@ const commentController = {
       })
     }
     const newComment = await new Comment({
-      user: req.user._id,
       content,
       tag,
       reply,
       postId,
       postUserId,
+      user: req.user,
     })
     try {
       await Post.findOneAndUpdate(
@@ -98,6 +98,9 @@ const commentController = {
         _id: req.params.id,
         $or: [{postUserId: req.user._id}, {user: req.user._id}],
       })
+      if (!comment) {
+        return res.status(404).json({message: 'Bình luận không tồn tại'})
+      }
       await Post.findOneAndUpdate(
         {_id: comment.postId},
         {

@@ -6,14 +6,14 @@ const auth = async (req, res, next) => {
     const token = req.header('Authorization')
     if (!token) {
       return res
-        .status(500)
+        .status(401)
         .json({message: 'Lỗi! Người dùng chưa được xác thực'})
     }
 
     const decoded = jwt.verify(token, process.env.ACCESSTOKENSECRET)
     if (!decoded) {
       return res
-        .status(500)
+        .status(401)
         .json({message: 'Lỗi! Người dùng chưa được xác thực'})
     }
 
