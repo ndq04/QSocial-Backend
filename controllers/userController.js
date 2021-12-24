@@ -104,6 +104,7 @@ const userController = {
         },
         {new: true}
       ).populate('friends followings', '-password')
+
       await User.findOneAndUpdate(
         {_id: req.body._id},
         {
@@ -129,6 +130,7 @@ const userController = {
         },
         {new: true}
       ).populate('friends followings', '-password')
+
       await User.findOneAndUpdate(
         {_id: req.body._id},
         {

@@ -1,10 +1,9 @@
 const mongoose = require('mongoose')
-const Schema = mongoose.Schema
 
-const NotifySchema = new Schema(
+const NotifySchema = new mongoose.Schema(
   {
     id: {type: mongoose.Types.ObjectId},
-    user: {type: mongoose.Types.ObjectId},
+    user: {type: mongoose.Types.ObjectId, ref: 'user'},
     recipients: [mongoose.Types.ObjectId],
     url: String,
     content: String,

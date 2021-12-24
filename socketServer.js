@@ -3,14 +3,11 @@ const users = []
 const socketServer = (socket) => {
   socket.on('joinUser', (id) => {
     users.push({id, socketId: socket.id})
-    console.log({users})
   })
   socket.on('disconnect', () => {
     const user = users.filter((user) => user.socketId !== socket.id)
-    console.log({user})
   })
 
-  // like - unlike
   socket.on('likePost', (newPost) => {
     const ids = [...newPost.user.friends, newPost.user._id]
     const clients = users.filter((user) => ids.includes(user.id))
@@ -48,12 +45,28 @@ const socketServer = (socket) => {
     }
   })
   socket.on('addfriend', (newUser) => {
-    const user = users.filter((user) => user.id === newUser.id)
+    const user = users.find((user) => user.id === newUser._id)
     user && socket.to(`${user.socketId}`).emit('addfriendToClient', newUser)
   })
   socket.on('unfriend', (newUser) => {
-    const user = users.filter((user) => user.id === newUser.id)
+    const user = users.find((user) => user.id === newUser._id)
     user && socket.to(`${user.socketId}`).emit('unfriendToClient', newUser)
   })
+  socket.on('createNotify', (msg) => {
+    const clients = users.filter((user) => msg.recipients.includes(user.id))
+    if (clients.length > 0) {
+      clients.forEach((client) => {
+        socket.to(`${client.socketId}`).emit('createNotifyToClient', msg)
+      })
+    }
+  })
+  // socket.on('removeNotify', (msg) => {
+  //   const clients = users.filter((user) => msg.recipients.includes(user.id))
+  //   if (clients.length > 0) {
+  //     clients.forEach((client) => {
+  //       socket.to(`${client.socketId}`).emit('removeNotifyToClient', msg)
+  //     })
+  //   }
+  // })
 }
 module.exports = socketServer

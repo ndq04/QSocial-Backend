@@ -240,7 +240,10 @@ const postController = {
       await Comment.deleteMany({_id: {$in: post.comments}})
       res.status(200).json({
         message: 'Xóa bài viết thành công',
-        id: post._id,
+        removedPost: {
+          ...post,
+          user: req.user,
+        },
       })
     } catch (error) {
       res.status(404).json({
