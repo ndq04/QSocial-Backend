@@ -66,7 +66,7 @@ const messengerController = {
         ],
       })
         .sort('-createdAt')
-        .populate('recipients', 'avatar firstname lastname')
+        .populate('recipient', 'avatar firstname lastname')
 
       res.status(200).json({
         message,

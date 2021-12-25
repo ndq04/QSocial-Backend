@@ -68,5 +68,9 @@ const socketServer = (socket) => {
   //     })
   //   }
   // })
+  socket.on('addMessenger', (msg) => {
+    const user = users.find((user) => user.id === msg.recipient)
+    user && socket.to(`${user.socketId}`).emit('addMessengerToClient', msg)
+  })
 }
 module.exports = socketServer
