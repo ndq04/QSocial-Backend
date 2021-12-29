@@ -50,16 +50,12 @@ const UserSchema = new Schema(
     },
     avatar: {
       type: String,
-      default: 'https://i.imgur.com/iDuSx6e.png',
+      default:
+        'https://res.cloudinary.com/doltvro6d/image/upload/v1640764224/qsocial/Screenshot_2021-12-29_144949_vidtnq.png',
     },
     coverimage: {
       type: String,
       default: 'https://i.imgur.com/Uk3dtJn.png',
-    },
-    story: {
-      type: String,
-      defalut: '',
-      maxlength: 200,
     },
     friends: [
       {

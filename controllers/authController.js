@@ -8,11 +8,39 @@ const authController = {
       const {firstname, lastname, username, email, password, gender} = req.body
       const newUsername = username.toLowerCase().replace(/ /g, '')
 
+      // Check empty firstname
+      if (!firstname) {
+        return res.status(400).json({
+          message: 'Họ không được để trống',
+        })
+      }
+
+      // Check empty lasttname
+      if (!lastname) {
+        return res.status(400).json({
+          message: 'Tên không được để trống',
+        })
+      }
+
+      // Check empty username
+      if (!username) {
+        return res.status(400).json({
+          message: 'Tên người dùng không được để trống',
+        })
+      }
+
+      // Check empty email
+      if (!email) {
+        return res.status(400).json({
+          message: 'Email không được để trống',
+        })
+      }
+
       // Check exists username
       const checkExistsUsername = await User.findOne({username: newUsername})
       if (checkExistsUsername) {
         return res.status(400).json({
-          message: 'Tên người dùng này đã được sử dụng !',
+          message: 'Tên người dùng này đã được sử dụng',
         })
       }
 
@@ -20,14 +48,14 @@ const authController = {
       const checkExistsEmail = await User.findOne({email})
       if (checkExistsEmail) {
         return res.status(400).json({
-          message: 'Địa chỉ email này đã được sử dụng !',
+          message: 'Địa chỉ email này đã được sử dụng',
         })
       }
 
       // Check password length
       if (password.length < 6) {
         return res.status(400).json({
-          message: 'Mật khẩu phải có tối thiểu 6 ký tự !',
+          message: 'Mật khẩu phải có tối thiểu 6 ký tự',
         })
       }
 
@@ -55,7 +83,7 @@ const authController = {
       await newUser.save()
 
       res.status(200).json({
-        message: 'Đăng ký tài khoản thành công !',
+        message: 'Đăng ký tài khoản thành công',
         access_token,
         user: newUser,
       })
@@ -76,7 +104,7 @@ const authController = {
       )
       if (!user) {
         return res.status(400).json({
-          message: 'Tài khoản đăng nhập không tồn tại !',
+          message: 'Tài khoản không tồn tại',
         })
       }
 
@@ -84,7 +112,7 @@ const authController = {
       if (!validPassword) {
         return res.status(400).json({
           success: false,
-          message: 'Mật khẩu không chính xác !',
+          message: 'Mật khẩu không chính xác',
         })
       }
 
@@ -98,7 +126,7 @@ const authController = {
       })
 
       res.status(200).json({
-        message: 'Đăng nhập thành công !',
+        message: 'Đăng nhập thành công',
         access_token,
         user,
       })
@@ -113,7 +141,7 @@ const authController = {
   logout: async (req, res) => {
     try {
       res.clearCookie('refreshtoken', {path: 'api/refresh_token'})
-      res.status(200).json({message: 'Logged out !'})
+      res.status(200).json({message: 'Đăng xuất thành công'})
     } catch (error) {
       res.status(500).json({
         message: 'Lỗi máy chủ nội bộ',
@@ -126,8 +154,8 @@ const authController = {
     try {
       const ref_token = req.cookies.refreshtoken
       if (!ref_token) {
-        return res.status(400).json({
-          message: 'Bạn chưa đăng nhập !',
+        return res.status(401).json({
+          message: 'Bạn chưa đăng nhập',
         })
       }
       jwt.verify(
@@ -135,7 +163,7 @@ const authController = {
         process.env.REFRESHTOKENSECRET,
         async (err, result) => {
           if (err) {
-            return res.status(400).json({message: 'Bạn chưa đăng nhập !'})
+            return res.status(401).json({message: 'Bạn chưa đăng nhập'})
           }
 
           const user = await User.findById(result.id)
@@ -143,7 +171,7 @@ const authController = {
             .populate('friends followings')
 
           if (!user) {
-            return res.status(400).json({message: 'Người dùng không tồn tại'})
+            return res.status(404).json({message: 'Người dùng không tồn tại'})
           }
 
           const access_token = createAccessToken({id: result.id})

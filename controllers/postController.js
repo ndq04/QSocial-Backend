@@ -5,15 +5,19 @@ const Comment = require('../models/CommentModel')
 const postController = {
   createPost: async (req, res) => {
     try {
-      const {content, images} = req.body
+      const {content} = req.body
+      if (!content) {
+        return res.status(400).json({
+          message: 'Thiếu nội dung bài viết',
+        })
+      }
       const newPost = new Post({
         content,
-        images,
         user: req.user._id,
       })
       await newPost.save()
       res.status(200).json({
-        message: 'Đăng bài viết thành công !',
+        message: 'Đăng bài viết thành công',
         newPost: {
           ...newPost._doc,
           user: req.user,
@@ -49,7 +53,7 @@ const postController = {
         })
       }
       res.status(200).json({
-        message: 'success',
+        message: 'Thành công',
         result: posts.length,
         posts,
       })
@@ -196,7 +200,7 @@ const postController = {
           },
         })
       res.status(200).json({
-        message: 'success',
+        message: 'Thành công',
         result: posts.length,
         posts,
       })
@@ -222,7 +226,7 @@ const postController = {
         })
 
       res.status(200).json({
-        message: 'success',
+        message: 'Thành công',
         post,
       })
     } catch (error) {
