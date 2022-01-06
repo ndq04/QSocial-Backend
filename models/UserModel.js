@@ -32,6 +32,10 @@ const UserSchema = new Schema(
       type: String,
       required: true,
     },
+    gender: {
+      type: String,
+      default: 'male',
+    },
     from: {
       type: String,
       default: '',
@@ -43,10 +47,6 @@ const UserSchema = new Schema(
     job: {
       type: String,
       default: '',
-    },
-    gender: {
-      type: String,
-      default: 'male',
     },
     avatar: {
       type: String,
