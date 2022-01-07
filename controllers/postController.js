@@ -5,14 +5,15 @@ const Comment = require('../models/CommentModel')
 const postController = {
   createPost: async (req, res) => {
     try {
-      const {content} = req.body
-      if (!content) {
-        return res.status(400).json({
-          message: 'Thiếu nội dung bài viết',
-        })
-      }
+      const {content, images} = req.body
+      // if (!content) {
+      //   return res.status(400).json({
+      //     message: 'Thiếu nội dung bài viết',
+      //   })
+      // }
       const newPost = new Post({
         content,
+        images,
         user: req.user._id,
       })
       await newPost.save()
