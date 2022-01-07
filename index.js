@@ -3,7 +3,7 @@ const PORT = process.env.PORT || 8080
 
 const express = require('express')
 const app = express()
-const morgan = require('morgan')
+// const morgan = require('morgan')
 const mongoose = require('./connect')
 const cors = require('cors')
 const cookieparser = require('cookie-parser')
@@ -25,7 +25,7 @@ app.use(cors())
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
 app.use(cookieparser())
-app.use(morgan('common'))
+// app.use(morgan('common'))
 
 const http = require('http').createServer(app)
 const io = require('socket.io')(http)
